@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "./user/user.module";
+import { VirtualTeamBuildingActivitiesModule } from "./virtualTeamBuildingActivities/virtualTeamBuildingActivities.module";
+import { RecognitionAndRewardsModule } from "./recognitionAndRewards/recognitionAndRewards.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -20,6 +22,8 @@ import { AuthModule } from "./auth/auth.module";
     AuthModule,
     KafkaModule,
     UserModule,
+    VirtualTeamBuildingActivitiesModule,
+    RecognitionAndRewardsModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,

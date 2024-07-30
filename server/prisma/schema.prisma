@@ -18,3 +18,25 @@ model User {
   updatedAt DateTime @updatedAt
   username  String   @unique
 }
+
+model VirtualTeamBuildingActivities {
+  activityDate    DateTime?
+  createdAt       DateTime  @default(now())
+  description     String?
+  durationMinutes Int?
+  id              String    @id @default(cuid())
+  maxParticipants Int?
+  title           String?
+  updatedAt       DateTime  @updatedAt
+}
+
+model RecognitionAndRewards {
+  createdAt        DateTime  @default(now())
+  description      String?
+  id               String    @id @default(cuid())
+  recipient        String?
+  recognitionTitle String?
+  rewardAmount     Float?
+  rewardDate       DateTime?
+  updatedAt        DateTime  @updatedAt
+}
