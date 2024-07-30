@@ -26,6 +26,9 @@ import { User } from "./User";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserUpdateInput } from "./UserUpdateInput";
+import { RecognitionAndRewardsFindManyArgs } from "../../recognitionAndRewards/base/RecognitionAndRewardsFindManyArgs";
+import { RecognitionAndRewards } from "../../recognitionAndRewards/base/RecognitionAndRewards";
+import { RecognitionAndRewardsWhereUniqueInput } from "../../recognitionAndRewards/base/RecognitionAndRewardsWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -203,5 +206,123 @@ export class UserControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/recognitionAndRewardsItems")
+  @ApiNestedQuery(RecognitionAndRewardsFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "RecognitionAndRewards",
+    action: "read",
+    possession: "any",
+  })
+  async findRecognitionAndRewardsItems(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<RecognitionAndRewards[]> {
+    const query = plainToClass(
+      RecognitionAndRewardsFindManyArgs,
+      request.query
+    );
+    const results = await this.service.findRecognitionAndRewardsItems(
+      params.id,
+      {
+        ...query,
+        select: {
+          activity: true,
+          createdAt: true,
+          description: true,
+          id: true,
+          recognitionTitle: true,
+          rewardAmount: true,
+          rewardDate: true,
+          updatedAt: true,
+
+          user: {
+            select: {
+              id: true,
+            },
+          },
+
+          virtualTeamBuildingActivitiesItems: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      }
+    );
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/recognitionAndRewardsItems")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async connectRecognitionAndRewardsItems(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RecognitionAndRewardsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      recognitionAndRewardsItems: {
+        connect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/recognitionAndRewardsItems")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async updateRecognitionAndRewardsItems(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RecognitionAndRewardsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      recognitionAndRewardsItems: {
+        set: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/recognitionAndRewardsItems")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectRecognitionAndRewardsItems(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RecognitionAndRewardsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      recognitionAndRewardsItems: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

@@ -11,98 +11,107 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+
 import {
-  IsString,
+  IsBoolean,
   IsOptional,
+  IsString,
   MaxLength,
+  IsNumber,
+  Min,
+  Max,
+  IsDate,
   ValidateNested,
 } from "class-validator";
-import { RecognitionAndRewardsUpdateManyWithoutUsersInput } from "./RecognitionAndRewardsUpdateManyWithoutUsersInput";
+
 import { Type } from "class-transformer";
-import { IsJSONValue } from "../../validators";
-import { GraphQLJSON } from "graphql-type-json";
-import { InputJsonValue } from "../../types";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { VirtualTeamBuildingActivitiesWhereUniqueInput } from "../../virtualTeamBuildingActivities/base/VirtualTeamBuildingActivitiesWhereUniqueInput";
 
 @InputType()
-class UserUpdateInput {
+class RecognitionAndRewardsCreateInput {
   @ApiProperty({
     required: false,
-    type: String,
+    type: Boolean,
   })
-  @IsString()
+  @IsBoolean()
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => Boolean, {
     nullable: true,
   })
-  email?: string | null;
+  activity?: boolean | null;
 
   @ApiProperty({
     required: false,
     type: String,
   })
   @IsString()
-  @MaxLength(256)
+  @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
     nullable: true,
   })
-  firstName?: string | null;
+  description?: string | null;
 
   @ApiProperty({
     required: false,
     type: String,
   })
   @IsString()
-  @MaxLength(256)
+  @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
     nullable: true,
   })
-  lastName?: string | null;
+  recognitionTitle?: string | null;
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: Number,
   })
-  @IsString()
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => Number, {
     nullable: true,
   })
-  password?: string;
+  rewardAmount?: number | null;
 
   @ApiProperty({
     required: false,
-    type: () => RecognitionAndRewardsUpdateManyWithoutUsersInput,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  rewardDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => RecognitionAndRewardsUpdateManyWithoutUsersInput)
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => RecognitionAndRewardsUpdateManyWithoutUsersInput, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  recognitionAndRewardsItems?: RecognitionAndRewardsUpdateManyWithoutUsersInput;
+  user?: UserWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,
+    type: () => VirtualTeamBuildingActivitiesWhereUniqueInput,
   })
-  @IsJSONValue()
+  @ValidateNested()
+  @Type(() => VirtualTeamBuildingActivitiesWhereUniqueInput)
   @IsOptional()
-  @Field(() => GraphQLJSON, {
+  @Field(() => VirtualTeamBuildingActivitiesWhereUniqueInput, {
     nullable: true,
   })
-  roles?: InputJsonValue;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  username?: string;
+  virtualTeamBuildingActivitiesItems?: VirtualTeamBuildingActivitiesWhereUniqueInput | null;
 }
 
-export { UserUpdateInput as UserUpdateInput };
+export { RecognitionAndRewardsCreateInput as RecognitionAndRewardsCreateInput };

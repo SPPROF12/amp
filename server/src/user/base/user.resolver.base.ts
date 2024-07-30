@@ -26,6 +26,8 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { CreateUserArgs } from "./CreateUserArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
+import { RecognitionAndRewardsFindManyArgs } from "../../recognitionAndRewards/base/RecognitionAndRewardsFindManyArgs";
+import { RecognitionAndRewards } from "../../recognitionAndRewards/base/RecognitionAndRewards";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -130,5 +132,30 @@ export class UserResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [RecognitionAndRewards], {
+    name: "recognitionAndRewardsItems",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "RecognitionAndRewards",
+    action: "read",
+    possession: "any",
+  })
+  async findRecognitionAndRewardsItems(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: RecognitionAndRewardsFindManyArgs
+  ): Promise<RecognitionAndRewards[]> {
+    const results = await this.service.findRecognitionAndRewardsItems(
+      parent.id,
+      args
+    );
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }
