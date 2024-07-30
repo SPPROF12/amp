@@ -11,24 +11,26 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { IntNullableFilter } from "../../util/IntNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
-import { RecognitionAndRewardsListRelationFilter } from "../../recognitionAndRewards/base/RecognitionAndRewardsListRelationFilter";
+import { RecognitionAndRewardsWhereUniqueInput } from "../../recognitionAndRewards/base/RecognitionAndRewardsWhereUniqueInput";
 
 @InputType()
-class UserWhereInput {
+class VirtualTeamBuildingActivitiesWhereInput {
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    type: DateTimeNullableFilter,
   })
-  @Type(() => StringNullableFilter)
+  @Type(() => DateTimeNullableFilter)
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => DateTimeNullableFilter, {
     nullable: true,
   })
-  email?: StringNullableFilter;
+  activityDate?: DateTimeNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -39,7 +41,18 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  firstName?: StringNullableFilter;
+  description?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: IntNullableFilter,
+  })
+  @Type(() => IntNullableFilter)
+  @IsOptional()
+  @Field(() => IntNullableFilter, {
+    nullable: true,
+  })
+  durationMinutes?: IntNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -54,6 +67,29 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
+    type: IntNullableFilter,
+  })
+  @Type(() => IntNullableFilter)
+  @IsOptional()
+  @Field(() => IntNullableFilter, {
+    nullable: true,
+  })
+  maxParticipants?: IntNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => RecognitionAndRewardsWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => RecognitionAndRewardsWhereUniqueInput)
+  @IsOptional()
+  @Field(() => RecognitionAndRewardsWhereUniqueInput, {
+    nullable: true,
+  })
+  rewards?: RecognitionAndRewardsWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
     type: StringNullableFilter,
   })
   @Type(() => StringNullableFilter)
@@ -61,30 +97,7 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  lastName?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => RecognitionAndRewardsListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => RecognitionAndRewardsListRelationFilter)
-  @IsOptional()
-  @Field(() => RecognitionAndRewardsListRelationFilter, {
-    nullable: true,
-  })
-  recognitionAndRewardsItems?: RecognitionAndRewardsListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    type: StringFilter,
-  })
-  @Type(() => StringFilter)
-  @IsOptional()
-  @Field(() => StringFilter, {
-    nullable: true,
-  })
-  username?: StringFilter;
+  title?: StringNullableFilter;
 }
 
-export { UserWhereInput as UserWhereInput };
+export { VirtualTeamBuildingActivitiesWhereInput as VirtualTeamBuildingActivitiesWhereInput };

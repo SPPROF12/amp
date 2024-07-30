@@ -11,21 +11,36 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+
 import {
+  IsBoolean,
+  IsOptional,
   IsDate,
   IsString,
-  IsOptional,
   MaxLength,
+  IsNumber,
+  Min,
+  Max,
   ValidateNested,
 } from "class-validator";
+
 import { Type } from "class-transformer";
-import { RecognitionAndRewards } from "../../recognitionAndRewards/base/RecognitionAndRewards";
-import { IsJSONValue } from "../../validators";
-import { GraphQLJSON } from "graphql-type-json";
-import { JsonValue } from "type-fest";
+import { User } from "../../user/base/User";
+import { VirtualTeamBuildingActivities } from "../../virtualTeamBuildingActivities/base/VirtualTeamBuildingActivities";
 
 @ObjectType()
-class User {
+class RecognitionAndRewards {
+  @ApiProperty({
+    required: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Field(() => Boolean, {
+    nullable: true,
+  })
+  activity!: boolean | null;
+
   @ApiProperty({
     required: true,
   })
@@ -39,23 +54,12 @@ class User {
     type: String,
   })
   @IsString()
+  @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
     nullable: true,
   })
-  email!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(256)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  firstName!: string | null;
+  description!: string | null;
 
   @ApiProperty({
     required: true,
@@ -70,28 +74,36 @@ class User {
     type: String,
   })
   @IsString()
-  @MaxLength(256)
+  @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
     nullable: true,
   })
-  lastName!: string | null;
+  recognitionTitle!: string | null;
 
   @ApiProperty({
     required: false,
-    type: () => [RecognitionAndRewards],
+    type: Number,
   })
-  @ValidateNested()
-  @Type(() => RecognitionAndRewards)
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
   @IsOptional()
-  recognitionAndRewardsItems?: Array<RecognitionAndRewards>;
+  @Field(() => Number, {
+    nullable: true,
+  })
+  rewardAmount!: number | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
   })
-  @IsJSONValue()
-  @Field(() => GraphQLJSON)
-  roles!: JsonValue;
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  rewardDate!: Date | null;
 
   @ApiProperty({
     required: true,
@@ -102,12 +114,22 @@ class User {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: true,
-    type: String,
+    required: false,
+    type: () => User,
   })
-  @IsString()
-  @Field(() => String)
-  username!: string;
+  @ValidateNested()
+  @Type(() => User)
+  @IsOptional()
+  user?: User | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => VirtualTeamBuildingActivities,
+  })
+  @ValidateNested()
+  @Type(() => VirtualTeamBuildingActivities)
+  @IsOptional()
+  virtualTeamBuildingActivitiesItems?: VirtualTeamBuildingActivities | null;
 }
 
-export { User as User };
+export { RecognitionAndRewards as RecognitionAndRewards };
